@@ -58,7 +58,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 	"rest_framework",
 	"corsheaders",
-    "wingcol"
+    "WingCol"
 ]
 
 MIDDLEWARE = [
@@ -149,4 +149,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = 'wingcol.NormalUser'
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+
+AUTH_USER_MODEL = 'WingCol.NormalUser'
