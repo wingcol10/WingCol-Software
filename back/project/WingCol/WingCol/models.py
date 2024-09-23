@@ -30,7 +30,7 @@ class NormalUser(AbstractBaseUser, PermissionsMixin):
 		return check_password(raw_password, self.password)
 
 
-class Administrator(models.Model):
+class AdministraDor(models.Model):
 	class Genero(models.TextChoices):
 		MASCULINO = 'M', 'Masculino'
 		FEMENINO = 'F', 'Femenino'
@@ -44,7 +44,7 @@ class Administrator(models.Model):
 	genero = models.CharField(max_length=1, choices=Genero.choices)
 	telefono = models.PositiveIntegerField()
 
-class Client(models.Model):
+class Cliente(models.Model):
 	class Genero(models.TextChoices):
 		MASCULINO = 'M', 'Masculino'
 		FEMENINO = 'F', 'Femenino'
@@ -73,73 +73,81 @@ class Root(models.Model):
 	user = models.OneToOneField(NormalUser, on_delete=models.CASCADE)
 
 class Tarjetas(models.Model):
+	class TipoTarjeta(models.TextChoices):
+		DEBITO = 'D', 'Débito'
+		CREDITO = 'C', 'Crédito'
 	id_tarjeta = models.PositiveIntegerField(primary_key=True) 
-	id_cliente = models.ForeignKey(Client, on_delete=models.CASCADE)
-	TipoTarjeta = models.TextChoices("Débito", "Crédito")
-	tipo_tarjeta = models.CharField(max_length=20, choices=TipoTarjeta)
+	id_cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
+	tipo_tarjeta = models.CharField(max_length=20, choices=TipoTarjeta.choices)
 	vvc = models.PositiveIntegerField()
 	fecha_expiracion = models.DateField()
 	saldo = models.IntegerField()
 
 class Vuelos(models.Model):
+	class EstadoVuelo(models.TextChoices):
+		PROGRAMADO = 'P', 'Programado'
+		REALIZADO = 'R', 'Realizado'
+		CANCELADO = 'C', 'Cancelado'
+
+	class TipoVuelo(models.TextChoices):
+		NACIONAL = 'N', 'Nacional'
+		INTERNACIONAL = 'I', 'Internacional'
+
 	id_vuelo = models.PositiveIntegerField(primary_key=True)
 	ciudad_origen = models.CharField(max_length=25)
 	ciudad_destino = models.CharField(max_length=25)
 	precio = models.PositiveIntegerField()
 	fecha_salida = models.DateTimeField()
 	fecha_llegada = models.DateTimeField()
-	Tipo = models.TextChoices("Nacional", "Internacional")
-	tipo = models.CharField(max_length=20, choices=Tipo)
-	Estado = models.TextChoices("Programado", "Realizado", "Cancelado")
-	estado = models.CharField(max_length=20, choices=Estado)
+	tipo = models.CharField(max_length=20, choices=TipoVuelo.choices)
+	estado = models.CharField(max_length=20, choices=EstadoVuelo.choices)
 	
 
 class Sillas(models.Model):
+	class ClaseAsiento(models.TextChoices):
+		ECONOMICA = 'E', 'Clase económica'
+		PRIMERA_CLASE = 'P', 'Primera clase'
+
+	class EstadoAsiento(models.TextChoices):
+		LIBRE = 'L', 'Libre'
+		RESERVADO = 'R', 'Reservado'
+		OCUPADO = 'O', 'Ocupado'
+
 	id_silla = models.PositiveIntegerField(primary_key=True)
 	id_vuelo = models.ForeignKey(Vuelos, on_delete=models.CASCADE)
 	ubicacion = models.CharField(max_length=5)
-	Clase = models.TextChoices("Clase económica", "Primera clase")
-	clase = models.CharField(max_length=20, choices=Clase)
-	Estado = models.TextChoices("Libre", "Reservado", "Ocupado")
-	estado = models.CharField(max_length=20, choices=Estado)
+	clase = models.CharField(max_length=20, choices=ClaseAsiento.choices)
+	estado = models.CharField(max_length=20, choices=EstadoAsiento.choices)
 
 class ComprasReservas(models.Model):
-	id_cliente = models.ForeignKey(Client, on_delete=models.CASCADE)
+	class Estado(models.TextChoices):
+		COMPRADO = 'COM', 'Comprado'
+		RESERVADO = 'RES', 'Reservado'
+		CANCELADO = 'CAN', 'Cancelado'
+	id_cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
 	id_vuelo = models.ForeignKey(Vuelos, on_delete=models.CASCADE)
 	id_cr = models.PositiveIntegerField(primary_key=True)
-	Estado = models.TextChoices("Comprado", "Reservado", "Cancelado")
-	estado = models.CharField(max_length=20, choices=Estado)
+	estado = models.CharField(max_length=20, choices=Estado.choices)
 	valor = models.PositiveIntegerField()
 
 class Tiquete(models.Model):
+	class ClaseVuelo(models.TextChoices):
+		ECONOMICA = 'E', 'Clase económica'
+		PRIMERA_CLASE = 'P', 'Primera clase'
+	class TipoEquipaje(models.TextChoices):
+		PERSONAL = 'EP', 'Equipaje personal'
+		MANO = 'EM', 'Equipaje de mano'
+		MALETA = 'MB', 'Maleta de bodega'
+
 	id_tiquete = models.PositiveIntegerField(primary_key=True)
-	id_cliente = models.ForeignKey(Client, on_delete=models.CASCADE)
+	id_cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
 	id_vuelo = models.ForeignKey(Vuelos, on_delete=models.CASCADE)
-	Clase = models.TextChoices("Clase económica", "Primera clase")
-	clase = models.CharField(max_length=20, choices=Clase)
-	tipo_equipaje = models.CharField(max_length=20)
-	verificacion = models.CharField(unique=True)
+	clase = models.CharField(max_length=20, choices=ClaseVuelo.choices)
+	tipo_equipaje = models.CharField(max_length=20, choices=TipoEquipaje.choices)
+	verificacion = models.CharField(unique=True, max_length=50)
 
 class Busquedas(models.Model):
-	id_cliente = models.ForeignKey(Client, on_delete=models.CASCADE)
+	id_cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
 	ciudad_origen = models.CharField(max_length=25)
 	ciudad_destino = models.CharField(max_length=25)
 	fecha = models.DateTimeField(auto_now_add=True)
-
-class HistorialCompra(models.Model):
-	id_cliente = models.ForeignKey(Client, on_delete=models.CASCADE)
-	id_vuelo = models.ForeignKey(Vuelos, on_delete=models.CASCADE)
-	id_compra = models.PositiveIntegerField(primary_key=True)
-	valor = models.PositiveIntegerField()
-
-class HistorialVuelos(models.Model):
-	id_vuelo = models.PositiveIntegerField(primary_key=True)
-	ciudad_origen = models.CharField(max_length=25)
-	ciudad_destino = models.CharField(max_length=25)
-	precio = models.PositiveIntegerField()
-	fecha_salida = models.DateTimeField()
-	duracion_estimada = models.PositiveIntegerField(verbose="Tiempo medido en minutos")
-	Tipo = models.TextChoices("Nacional", "Internacional")
-	tipo = models.CharField(max_length=20, choices=Tipo)
-	Estado = models.TextChoices("Realizado", "Cancelado")
-	estado = models.CharField(max_length=20, choices=Estado)
