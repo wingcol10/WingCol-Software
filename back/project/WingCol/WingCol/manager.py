@@ -1,4 +1,5 @@
 from django.contrib.auth.models import BaseUserManager
+from django.contrib.auth.password_validation import validate_password
 
 class UsersManager(BaseUserManager):
 	def create_user(self, user_id, email, password = None):
@@ -27,6 +28,6 @@ class UsersManager(BaseUserManager):
 			email = email, 
 			password = password
 		)
-		user.isadmin = True
+		user.is_admin = True
 		user.save(using = self.db)
 		return user

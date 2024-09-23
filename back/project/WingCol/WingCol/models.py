@@ -16,8 +16,8 @@ class NormalUser(AbstractBaseUser, PermissionsMixin):
 		unique=True
 	)
 	roles = models.PositiveSmallIntegerField(choices=ROLES)
+	activo = models.BooleanField(default=True)
 	# password_reset_token = models.CharField(max_length=255, null=True, blank=True)
-	
 	objects = UsersManager()
 
 	USERNAME_FIELD = 'user_id'
@@ -31,42 +31,42 @@ class NormalUser(AbstractBaseUser, PermissionsMixin):
 
 
 class Administrator(models.Model):
-	class Sex(models.TextChoices):
+	class Genero(models.TextChoices):
 		MASCULINO = 'M', 'Masculino'
 		FEMENINO = 'F', 'Femenino'
 		OTRO = 'O', 'Otro'
 
 	user = models.OneToOneField(NormalUser, on_delete=models.CASCADE)
-	name = models.CharField(max_length=50)
-	second_name = models.CharField(max_length=50)
-	last_name = models.CharField(max_length=50)
-	second_last_name = models.CharField(max_length=50)
-	sex = models.CharField(max_length=1, choices=Sex.choices)
-	phone = models.PositiveIntegerField()
+	nombre = models.CharField(max_length=50)
+	segundo_nombre = models.CharField(max_length=50)
+	apellido = models.CharField(max_length=50)
+	segundo_apellido = models.CharField(max_length=50)
+	genero = models.CharField(max_length=1, choices=Genero.choices)
+	telefono = models.PositiveIntegerField()
 
 class Client(models.Model):
-	class Sex(models.TextChoices):
+	class Genero(models.TextChoices):
 		MASCULINO = 'M', 'Masculino'
 		FEMENINO = 'F', 'Femenino'
 		OTRO = 'O', 'Otro'
 
-	class TypeDocument(models.TextChoices):
+	class TipoDocumento(models.TextChoices):
 		CC = 'CC', 'Cédula de Ciudadanía'
 		TI = 'TI', 'Tarjeta de Identidad'
 		CE = 'CE', 'Cédula de Extranjería'
 		PA = 'PA', 'Pasaporte'
 
 	user = models.OneToOneField(NormalUser, on_delete=models.CASCADE)
-	name = models.CharField(max_length=50)
-	second_name = models.CharField(max_length=50)
-	last_name = models.CharField(max_length=50)
-	second_last_name = models.CharField(max_length=50)
-	type_document = models.CharField(max_length=2, choices=TypeDocument.choices)
-	date_birth = models.DateField()
-	sex = models.CharField(max_length=1, choices=Sex.choices)	
-	phone = models.PositiveIntegerField()
-	address = models.CharField(max_length=50)
-	facturation_address = models.CharField(max_length=50)
+	nombre = models.CharField(max_length=50)
+	segundo_nombre = models.CharField(max_length=50)
+	apellido = models.CharField(max_length=50)
+	segundo_apellido = models.CharField(max_length=50)
+	tipo_documento = models.CharField(max_length=2, choices=TipoDocumento.choices)
+	fecha_nacimiento = models.DateField()
+	genero = models.CharField(max_length=1, choices=Genero.choices)	
+	telefono = models.PositiveIntegerField()
+	direccion = models.CharField(max_length=50)
+	direccion_facturacion = models.CharField(max_length=50)
 	
 
 class Root(models.Model):
@@ -118,7 +118,7 @@ class Tiquete(models.Model):
 	Clase = models.TextChoices("Clase económica", "Primera clase")
 	clase = models.CharField(max_length=20, choices=Clase)
 	tipo_equipaje = models.CharField(max_length=20)
-	verificacion = models.BooleanField()
+	verificacion = models.CharField(unique=True)
 
 class Busquedas(models.Model):
 	id_cliente = models.ForeignKey(Client, on_delete=models.CASCADE)
