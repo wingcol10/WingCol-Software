@@ -12,8 +12,7 @@ class NormalUser(AbstractBaseUser, PermissionsMixin):
 	user_id = models.PositiveBigIntegerField(unique=True)
 	email = models.EmailField(
 		verbose_name="direccion de correo electrónico",
-		max_length=255,
-		unique=True
+		max_length=100
 	)
 	roles = models.PositiveSmallIntegerField(choices=ROLES)
 	activo = models.BooleanField(default=True)
@@ -36,7 +35,7 @@ class AdministraDor(models.Model):
 		FEMENINO = 'F', 'Femenino'
 		OTRO = 'O', 'Otro'
 
-	user = models.OneToOneField(NormalUser, on_delete=models.CASCADE)
+	user_id = models.OneToOneField(NormalUser, on_delete=models.CASCADE)
 	nombre = models.CharField(max_length=50)
 	segundo_nombre = models.CharField(max_length=50)
 	apellido = models.CharField(max_length=50)
@@ -56,7 +55,7 @@ class Cliente(models.Model):
 		CE = 'CE', 'Cédula de Extranjería'
 		PA = 'PA', 'Pasaporte'
 
-	user = models.OneToOneField(NormalUser, on_delete=models.CASCADE)
+	user_id = models.OneToOneField(NormalUser, on_delete=models.CASCADE)
 	nombre = models.CharField(max_length=50)
 	segundo_nombre = models.CharField(max_length=50)
 	apellido = models.CharField(max_length=50)
@@ -70,7 +69,7 @@ class Cliente(models.Model):
 	
 
 class Root(models.Model):
-	user = models.OneToOneField(NormalUser, on_delete=models.CASCADE)
+	user_id = models.OneToOneField(NormalUser, on_delete=models.CASCADE)
 
 class Tarjetas(models.Model):
 	class TipoTarjeta(models.TextChoices):
@@ -144,7 +143,7 @@ class Tiquete(models.Model):
 	id_vuelo = models.ForeignKey(Vuelos, on_delete=models.CASCADE)
 	clase = models.CharField(max_length=20, choices=ClaseVuelo.choices)
 	tipo_equipaje = models.CharField(max_length=20, choices=TipoEquipaje.choices)
-	verificacion = models.CharField(unique=True, max_length=50)
+	verificacion = models.CharField( max_length=50)
 
 class Busquedas(models.Model):
 	id_cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
