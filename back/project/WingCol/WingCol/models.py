@@ -12,7 +12,7 @@ class NormalUser(AbstractBaseUser, PermissionsMixin):
 	user_id = models.PositiveBigIntegerField(unique=True)
 	email = models.EmailField(
 		verbose_name="direccion de correo electrónico",
-		max_length=255,
+		max_length=100,
 		unique=True
 	)
 	roles = models.PositiveSmallIntegerField(choices=ROLES)
@@ -30,7 +30,7 @@ class NormalUser(AbstractBaseUser, PermissionsMixin):
 		return check_password(raw_password, self.password)
 
 
-class AdministraDor(models.Model):
+class Administrador(models.Model):
 	class Genero(models.TextChoices):
 		MASCULINO = 'M', 'Masculino'
 		FEMENINO = 'F', 'Femenino'
