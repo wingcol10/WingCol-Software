@@ -3,7 +3,6 @@ from .manager import UsersManager
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.contrib.auth.hashers import make_password, check_password
 
-
 class NormalUser(AbstractBaseUser, PermissionsMixin):
 	ROLES = (
 		(1, "Cliente"),
