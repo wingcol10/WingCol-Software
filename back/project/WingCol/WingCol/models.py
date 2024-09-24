@@ -12,7 +12,8 @@ class NormalUser(AbstractBaseUser, PermissionsMixin):
 	user_id = models.PositiveBigIntegerField(unique=True)
 	email = models.EmailField(
 		verbose_name="direccion de correo electrónico",
-		max_length=100
+		max_length=100,
+		unique=True
 	)
 	roles = models.PositiveSmallIntegerField(choices=ROLES)
 	activo = models.BooleanField(default=True)
@@ -143,7 +144,7 @@ class Tiquete(models.Model):
 	id_vuelo = models.ForeignKey(Vuelos, on_delete=models.CASCADE)
 	clase = models.CharField(max_length=20, choices=ClaseVuelo.choices)
 	tipo_equipaje = models.CharField(max_length=20, choices=TipoEquipaje.choices)
-	verificacion = models.CharField( max_length=50)
+	verificacion = models.CharField(unique=True, max_length=50)
 
 class Busquedas(models.Model):
 	id_cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
