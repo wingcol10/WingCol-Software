@@ -18,5 +18,5 @@ def create_client(request):
     if user_serializer.is_valid() and client_serializer.is_valid():
         user_serializer.save()
         client_serializer.save()
-        return Response(user_serializer, client_serializer, status=status.HTTP_201_CREATED)
-    return Response(user_serializer, client_serializer, status=status.HTTP_400_BAD_REQUEST)
+        return Response(client_serializer.data, status=status.HTTP_201_CREATED)
+    return Response(client_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
