@@ -1,6 +1,8 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.authtoken.models import Token
+# from django.shortcuts import get_object_or_404
 from .models import *
 from .serializers import *
 
@@ -126,3 +128,16 @@ def delete_admin(request):
         return Response({"error": "Usuario no existente"}, status=status.HTTP_404_NOT_FOUND)
     except Administrador.DoesNotExist:
         return Response({"error": "Administrador no existente"}, status=status.HTTP_404_NOT_FOUND)
+    
+@api_view(['POST'])
+def login(request):
+    try:
+        user = NormalUser.objects.get(email=request.data['email'], activo=True)
+        if not user.check_password(request.data['password']):
+            return Response({"error": "Invalid Password"}, status=status.HTTP_401_UNAUTHORIZED)
+        print("pega")
+        token, created = Token.objects.get_or_create(user=user)
+        return Response({"token": token.key}, status=status.HTTP_200_OK)
+    except KeyError:
+        return Response({"error": "Invalid Request"}, status=status.HTTP_400_BAD_REQUEST)
+    

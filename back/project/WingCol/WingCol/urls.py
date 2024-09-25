@@ -28,4 +28,5 @@ urlpatterns = [
     path('users/admin/create/', create_admin),
     path('users/admin/update/', update_admin),
     path('users/admin/delete/', delete_admin),
+	path('users/login/', login)
 ]
