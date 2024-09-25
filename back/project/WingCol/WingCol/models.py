@@ -28,6 +28,10 @@ class NormalUser(AbstractBaseUser, PermissionsMixin):
 
 	def check_password(self, raw_password):
 		return check_password(raw_password, self.password)
+	
+	def soft_delete(self):
+		self.activo = False
+		self.save()
 
 
 class Administrador(models.Model):
@@ -44,6 +48,10 @@ class Administrador(models.Model):
 	genero = models.CharField(max_length=1, choices=Genero.choices)
 	telefono = models.PositiveIntegerField()
 	activo = models.BooleanField(default=True)
+
+	def soft_delete(self):
+		self.activo = False
+		self.save()
 
 class Cliente(models.Model):
 	class Genero(models.TextChoices):
@@ -69,6 +77,10 @@ class Cliente(models.Model):
 	direccion = models.CharField(max_length=50)
 	direccion_facturacion = models.CharField(max_length=50)
 	activo = models.BooleanField(default=True)
+
+	def soft_delete(self):
+		self.activo = False
+		self.save()
 	
 
 class Root(models.Model):

@@ -7,9 +7,19 @@ from .serializers import *
 
 @api_view(['GET'])
 def get_all_users(request):
-    users = NormalUser.objects.all()
+    users = NormalUser.objects.filter(activo=True)
     serializer = UserSerializer(users, many = True)
     return Response(serializer.data)
+
+@api_view(['GET'])
+def get_user(request, id):
+    try:
+        user = NormalUser.objects.get(user_id=id, activo=True)
+        serializer = UserSerializer(user, many=False)
+        return Response(serializer.data)
+    except NormalUser.DoesNotExist:
+        return Response({"error": "User does not exist"}, status=status.HTTP_404_NOT_FOUND)
+    
 
 @api_view(['POST'])
 def create_client(request):
@@ -44,10 +54,26 @@ def update_client(request):
         }, status=status.HTTP_400_BAD_REQUEST)
 
     except NormalUser.DoesNotExist:
-        return Response({"error": "User does not exist"}, status=status.HTTP_404_NOT_FOUND)
+        return Response({"error": "Usuario no existente"}, status=status.HTTP_404_NOT_FOUND)
     except Cliente.DoesNotExist:
-        return Response({"error": "Client does not exist"}, status=status.HTTP_404_NOT_FOUND)
+        return Response({"error": "Cliente no existente"}, status=status.HTTP_404_NOT_FOUND)
+    
+@api_view(['PUT'])
+def delete_client(request):
+    try:
+        user = NormalUser.objects.get(user_id=request.data['user_id'])
+        client = Cliente.objects.get(user_id=request.data['user_id'])
+        
+        user.soft_delete()
+        client.soft_delete()
 
+        return Response({"message": "Cliente borrado correctamente."}, status=status.HTTP_200_OK)
+
+    except NormalUser.DoesNotExist:
+        return Response({"error": "Usuario no existente"}, status=status.HTTP_404_NOT_FOUND)
+    except Cliente.DoesNotExist:
+        return Response({"error": "Cliente no existente"}, status=status.HTTP_404_NOT_FOUND)
+    
 @api_view(['POST'])
 def create_admin(request):
     user_serializer = UserSerializer(data=request.data)
@@ -81,6 +107,22 @@ def update_admin(request):
         }, status=status.HTTP_400_BAD_REQUEST)
 
     except NormalUser.DoesNotExist:
-        return Response({"error": "User does not exist"}, status=status.HTTP_404_NOT_FOUND)
-    except Cliente.DoesNotExist:
-        return Response({"error": "Client does not exist"}, status=status.HTTP_404_NOT_FOUND)
+        return Response({"error": "Usuario no existente"}, status=status.HTTP_404_NOT_FOUND)
+    except Administrador.DoesNotExist:
+        return Response({"error": "Cliente no existente"}, status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['PUT'])
+def delete_admin(request):
+    try:
+        user = NormalUser.objects.get(user_id=request.data['user_id'])
+        admin = Administrador.objects.get(user_id=request.data['user_id'])
+        
+        user.soft_delete()
+        admin.soft_delete()
+
+        return Response({"message": "Administrador borrado correctamente."}, status=status.HTTP_200_OK)
+
+    except NormalUser.DoesNotExist:
+        return Response({"error": "Usuario no existente"}, status=status.HTTP_404_NOT_FOUND)
+    except Administrador.DoesNotExist:
+        return Response({"error": "Administrador no existente"}, status=status.HTTP_404_NOT_FOUND)

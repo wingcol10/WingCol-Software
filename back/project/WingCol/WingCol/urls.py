@@ -21,7 +21,11 @@ from django.urls import path
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('users/', get_all_users),
+    path('user/<int:id>', get_user),
     path('users/client/create/', create_client),
     path('users/client/update/', update_client),
+    path('users/client/delete/', delete_client),
     path('users/admin/create/', create_admin),
+    path('users/admin/update/', update_admin),
+    path('users/admin/delete/', delete_admin),
 ]

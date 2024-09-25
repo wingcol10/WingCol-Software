@@ -5,6 +5,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model =  NormalUser
         fields = ['user_id', 'email', 'roles', 'password']
+        extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
         user = NormalUser(
@@ -40,5 +41,4 @@ class AdministradorSerializer(serializers.ModelSerializer):
         fields = [
             'user_id', 'nombre', 'segundo_nombre', 'apellido', 
             'segundo_apellido', 'genero', 'telefono']
-
         
