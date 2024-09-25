@@ -9,7 +9,7 @@ class NormalUser(AbstractBaseUser, PermissionsMixin):
 		(2, "Administrador"),
 		(3, "Root")
 	) 
-	user_id = models.PositiveBigIntegerField(unique=True)
+	user_id = models.PositiveBigIntegerField(primary_key=True, unique=True)
 	email = models.EmailField(
 		verbose_name="direccion de correo electrónico",
 		max_length=100,
@@ -28,6 +28,10 @@ class NormalUser(AbstractBaseUser, PermissionsMixin):
 
 	def check_password(self, raw_password):
 		return check_password(raw_password, self.password)
+	
+	def soft_delete(self):
+		self.activo = False
+		self.save()
 
 
 class Administrador(models.Model):
@@ -43,6 +47,11 @@ class Administrador(models.Model):
 	segundo_apellido = models.CharField(max_length=50)
 	genero = models.CharField(max_length=1, choices=Genero.choices)
 	telefono = models.PositiveIntegerField()
+	activo = models.BooleanField(default=True)
+
+	def soft_delete(self):
+		self.activo = False
+		self.save()
 
 class Cliente(models.Model):
 	class Genero(models.TextChoices):
@@ -64,13 +73,19 @@ class Cliente(models.Model):
 	tipo_documento = models.CharField(max_length=2, choices=TipoDocumento.choices)
 	fecha_nacimiento = models.DateField()
 	genero = models.CharField(max_length=1, choices=Genero.choices)	
-	telefono = models.PositiveIntegerField()
+	telefono = models.CharField(max_length=20)
 	direccion = models.CharField(max_length=50)
 	direccion_facturacion = models.CharField(max_length=50)
+	activo = models.BooleanField(default=True)
+
+	def soft_delete(self):
+		self.activo = False
+		self.save()
 	
 
 class Root(models.Model):
 	user_id = models.OneToOneField(NormalUser, on_delete=models.CASCADE)
+	activo = models.BooleanField(default=True)
 
 class Tarjetas(models.Model):
 	class TipoTarjeta(models.TextChoices):
@@ -82,6 +97,7 @@ class Tarjetas(models.Model):
 	vvc = models.PositiveIntegerField()
 	fecha_expiracion = models.DateField()
 	saldo = models.IntegerField()
+	activo = models.BooleanField(default=True)
 
 class Vuelos(models.Model):
 	class EstadoVuelo(models.TextChoices):
@@ -101,6 +117,7 @@ class Vuelos(models.Model):
 	fecha_llegada = models.DateTimeField()
 	tipo = models.CharField(max_length=20, choices=TipoVuelo.choices)
 	estado = models.CharField(max_length=20, choices=EstadoVuelo.choices)
+	activo = models.BooleanField(default=True)
 	
 
 class Sillas(models.Model):
@@ -118,6 +135,7 @@ class Sillas(models.Model):
 	ubicacion = models.CharField(max_length=5)
 	clase = models.CharField(max_length=20, choices=ClaseAsiento.choices)
 	estado = models.CharField(max_length=20, choices=EstadoAsiento.choices)
+	activo = models.BooleanField(default=True)
 
 class ComprasReservas(models.Model):
 	class Estado(models.TextChoices):
@@ -129,6 +147,7 @@ class ComprasReservas(models.Model):
 	id_cr = models.PositiveIntegerField(primary_key=True)
 	estado = models.CharField(max_length=20, choices=Estado.choices)
 	valor = models.PositiveIntegerField()
+	activo = models.BooleanField(default=True)
 
 class Tiquete(models.Model):
 	class ClaseVuelo(models.TextChoices):
@@ -144,10 +163,12 @@ class Tiquete(models.Model):
 	id_vuelo = models.ForeignKey(Vuelos, on_delete=models.CASCADE)
 	clase = models.CharField(max_length=20, choices=ClaseVuelo.choices)
 	tipo_equipaje = models.CharField(max_length=20, choices=TipoEquipaje.choices)
-	verificacion = models.CharField( max_length=50)
+	verificacion = models.CharField(unique=True, max_length=50)
+	activo = models.BooleanField(default=True)
 
 class Busquedas(models.Model):
 	id_cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
 	ciudad_origen = models.CharField(max_length=25)
 	ciudad_destino = models.CharField(max_length=25)
 	fecha = models.DateTimeField(auto_now_add=True)
+	activo = models.BooleanField(default=True)
