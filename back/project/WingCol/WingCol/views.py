@@ -3,7 +3,9 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.authtoken.models import Token
-# from django.shortcuts import get_object_or_404
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import permission_classes, authentication_classes
+from .auth import ClientAuthentication
 from .models import *
 from .serializers import *
 
@@ -24,6 +26,8 @@ def get_user(request, id):
         return Response({"error": "User does not exist"}, status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['GET'])
+@authentication_classes([ClientAuthentication])
+@permission_classes([IsAuthenticated])
 def get_client(request, id):
     try:
         user= NormalUser.objects.get(user_id=id, activo=True)
@@ -55,6 +59,8 @@ def create_client(request):
     return Response(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 @api_view(['PUT'])
+@authentication_classes([ClientAuthentication])
+@permission_classes([IsAuthenticated])
 def update_client(request):
     try:
         user = NormalUser.objects.get(user_id=request.data['user_id'])
@@ -80,6 +86,8 @@ def update_client(request):
         return Response({"error": "Cliente no existente"}, status=status.HTTP_404_NOT_FOUND)
     
 @api_view(['PUT'])
+@authentication_classes([ClientAuthentication])
+@permission_classes([IsAuthenticated])
 def delete_client(request, id):
     try:
         user = NormalUser.objects.get(user_id=id)
