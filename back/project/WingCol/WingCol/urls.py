@@ -26,6 +26,7 @@ urlpatterns = [
     path('users/client/create/', create_client),
     path('users/client/update/', update_client),
     path('users/client/delete/<int:id>', delete_client),
+    path('users/admin/<int:id>', get_admin), 
     path('users/admin/create/', create_admin),
     path('users/admin/update/', update_admin),
     path('users/admin/delete/<int:id>', delete_admin),
