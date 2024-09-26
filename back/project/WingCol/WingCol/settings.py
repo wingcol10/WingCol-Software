@@ -41,10 +41,7 @@ ALLOWED_HOSTS = ["*"]
 #     ],
 # }
 
-# SIMPLE_JWT = {
-#     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
-#     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-# }
+AUTH_TOKEN_VALIDITY = timedelta(minutes=1)
 
 
 # Application definition

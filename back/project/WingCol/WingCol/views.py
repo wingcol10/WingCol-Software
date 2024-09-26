@@ -189,4 +189,6 @@ def login(request):
         return Response({"token": token.key}, status=status.HTTP_200_OK)
     except KeyError:
         return Response({"error": "Invalid Request"}, status=status.HTTP_400_BAD_REQUEST)
+    except NormalUser.DoesNotExist:
+        return Response({"error": "User Doesn't Exist"}, status=status.HTTP_404_NOT_FOUND)
     
