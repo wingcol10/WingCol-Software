@@ -42,7 +42,7 @@ class Administrador(models.Model):
 
 	user_id = models.OneToOneField(NormalUser, on_delete=models.CASCADE)
 	nombre = models.CharField(max_length=50)
-	segundo_nombre = models.CharField(max_length=50)
+	segundo_nombre = models.CharField(max_length=50, blank=True)
 	apellido = models.CharField(max_length=50)
 	segundo_apellido = models.CharField(max_length=50)
 	genero = models.CharField(max_length=1, choices=Genero.choices)
@@ -67,7 +67,7 @@ class Cliente(models.Model):
 
 	user_id = models.OneToOneField(NormalUser, on_delete=models.CASCADE)
 	nombre = models.CharField(max_length=50)
-	segundo_nombre = models.CharField(max_length=50)
+	segundo_nombre = models.CharField(max_length=50, blank=True)
 	apellido = models.CharField(max_length=50)
 	segundo_apellido = models.CharField(max_length=50)
 	tipo_documento = models.CharField(max_length=2, choices=TipoDocumento.choices)

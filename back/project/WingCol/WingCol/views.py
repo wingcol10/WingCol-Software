@@ -53,7 +53,11 @@ def create_client(request):
         client_serializer = ClientSerializer(data=client_data)
         if client_serializer.is_valid():
             client_serializer.save()
-            return Response(client_serializer.data, status=status.HTTP_201_CREATED)
+            token, created = Token.objects.get_or_create(user=new_user)
+            return Response({
+                "token": token.key,
+                "user_data": client_serializer.data
+            }, status=status.HTTP_201_CREATED)
         NormalUser.objects.get(user_id=new_user.user_id).delete()
         return Response(client_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     return Response(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -182,7 +186,6 @@ def login(request):
         user = NormalUser.objects.get(email=request.data['email'], activo=True)
         if not user.check_password(request.data['password']):
             return Response({"error": "Invalid Password"}, status=status.HTTP_401_UNAUTHORIZED)
-        print("pega")
         token, created = Token.objects.get_or_create(user=user)
         return Response({"token": token.key}, status=status.HTTP_200_OK)
     except KeyError:

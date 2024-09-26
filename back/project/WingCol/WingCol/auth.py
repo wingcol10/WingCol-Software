@@ -20,3 +20,39 @@ class ClientAuthentication(authentication.BaseAuthentication):
 			return None
 		except:
 			raise exceptions.AuthenticationFailed('Invalid token')
+
+class AdminAuthentication(authentication.BaseAuthentication):
+	def authenticate(self, request):
+		token = request.headers.get('Authorization')
+		if not token:
+			return None
+		try:
+			token = token.split(' ')[1]
+			user_id = Token.objects.get(key=token).user_id
+			user = NormalUser.objects.get(user_id=user_id)
+			if user.roles == 2:
+				return (user, None)
+			else:
+				raise exceptions.AuthenticationFailed('No Permissions Provided')
+		except NormalUser.DoesNotExist:
+			return None
+		except:
+			raise exceptions.AuthenticationFailed('Invalid token')
+
+class RootAuthentication(authentication.BaseAuthentication):
+	def authenticate(self, request):
+		token = request.headers.get('Authorization')
+		if not token:
+			return None
+		try:
+			token = token.split(' ')[1]
+			user_id = Token.objects.get(key=token).user_id
+			user = NormalUser.objects.get(user_id=user_id)
+			if user.roles == 3:
+				return (user, None)
+			else:
+				raise exceptions.AuthenticationFailed('No Permissions Provided')
+		except NormalUser.DoesNotExist:
+			return None
+		except:
+			raise exceptions.AuthenticationFailed('Invalid token')
