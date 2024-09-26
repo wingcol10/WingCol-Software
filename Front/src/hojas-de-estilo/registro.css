@@ -1,4 +1,4 @@
-@import 'react-phone-number-input/style.css';
+@import "react-phone-number-input/style.css";
 
 .registro-principal {
   width: 1000px;
@@ -79,16 +79,16 @@
   margin-left: auto;
 }
 
-.foto-de-perfil{
-  font-family: "Poppins",sans-serif;
+.foto-de-perfil {
+  font-family: "Poppins", sans-serif;
   font-size: 16px;
   padding: 10px 0 10px 0;
   display: block;
   margin: auto;
 }
 
-.selector-paises{
-  font-family: "Poppins",sans-serif;
+.selector-paises {
+  font-family: "Poppins", sans-serif;
   font-size: 16px;
   color: #333;
   width: 48%;
@@ -96,11 +96,11 @@
   padding: 15px 0 10px 0;
 }
 
-.input-box .PhoneInput{
+.input-box .PhoneInput {
   height: 48px;
 }
 
-.error{
+.error {
   font-weight: bold;
   font-size: 18px;
   display: block;
@@ -110,9 +110,23 @@
 @media (max-width: 430px) {
   .registro-principal {
     width: 90%;
-    flex-direction: row;
+    flex-direction: column;
+    display: block;
+    margin: auto;
   }
-  .input-box {
+  .registro-principal .input-box {
+    width: 100%;
+  }
+  .registro-principal .multiples-opciones {
+    width: 100%;
+  }
+  .registro-principal .selector-paises {
+    width: 100%;
+  }
+  .registro-principal .foto-de-perfil {
+    width: 100%;
+  }
+  .registro-principal .boton-registro {
     width: 100%;
   }
 }

@@ -1,33 +1,64 @@
-import React from "react";
+import React, { useState } from "react";
 import "../hojas-de-estilo/inicio-de-sesion.css";
-import { useState } from "react";
 import { FaRegUserCircle } from "react-icons/fa";
 import { FaLock } from "react-icons/fa";
-import { Link } from "react-router-dom";
-import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../imagenes/logo.png";
 
 export function Formulario({ setUser }) {
-  // State para el usuario
+  // State para el usuario y la contraseña
   const [usuario, setUsuario] = useState("");
   const [contraseña, setContraseña] = useState("");
-  const [error, setError] = useState(false);
+  const [error, setError] = useState(""); // Cambiado a cadena para mostrar mensajes específicos
+
+  // useNavigate para redireccionar después del inicio de sesión exitoso
+  const navigate = useNavigate();
 
   // Función para manejar el submit
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (usuario === "" || contraseña === "") {
-      setError(true);
+      setError("Todos los campos son obligatorios");
       return;
     }
 
-    setError(false);
+    try {
+      // Enviar la solicitud al backend utilizando fetch
+      const response = await fetch("http://tu-backend-url/api/login/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: usuario,
+          password: contraseña,
+        }),
+      });
 
-    setUser([usuario]);
-  };
+      if (response.ok) {
+        const data = await response.json();
 
-  const obtenerDatos = () => {
-    return axios.get("").then((response) => response.data);
+        // Asumiendo que el backend responde con un token JWT en data.token
+        const token = data.token;
+
+        // Guardar el token en localStorage
+        localStorage.setItem("token", token);
+
+        // Asumimos que el backend también responde con un objeto de usuario (opcional)
+        const user = data.user;
+
+        // Guarda el usuario en el estado de la app
+        setUser(user);
+
+        // Redireccionar a la página principal (o la que elijas)
+        navigate("/home"); // Cambia "/home" por la ruta a la que quieras redirigir al usuario
+      } else {
+        setError("Credenciales incorrectas, por favor intenta de nuevo.");
+      }
+    } catch (error) {
+      console.error(error);
+      setError("Hubo un problema con el inicio de sesión. Intenta más tarde.");
+    }
   };
 
   // Retorno del componente
@@ -68,7 +99,8 @@ export function Formulario({ setUser }) {
             </Link>
           </p>
         </div>
-        {error && <p>Todos los campos son obligatorios</p>}
+        {error && <p className="error-message">{error}</p>}{" "}
+        {/* Mostrar mensajes de error */}
       </form>
     </section>
   );
