@@ -62,6 +62,7 @@ def create_client(request):
 @authentication_classes([ClientAuthentication])
 @permission_classes([IsAuthenticated])
 def update_client(request):
+    request.data['roles'] = 1
     try:
         user = NormalUser.objects.get(user_id=request.data['user_id'])
         client = Cliente.objects.get(user_id=request.data['user_id'])
@@ -69,8 +70,6 @@ def update_client(request):
         client_serializer = ClientSerializer(client, data=request.data)
 
         if user_serializer.is_valid() and client_serializer.is_valid():
-            user_serializer['roles'] = 1
-            client_serializer['roles'] = 1
             user_serializer.save()
             client_serializer.save()
             return Response(client_serializer.data, status=status.HTTP_202_ACCEPTED)
@@ -105,7 +104,7 @@ def delete_client(request, id):
     
 
 @api_view(['GET'])
-def get_client(request, id):
+def get_admin(request, id):
     try:
         user= NormalUser.objects.get(user_id=id, activo=True)
         user_serializer = UserSerializer(user, many=False)
