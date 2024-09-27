@@ -75,6 +75,7 @@ class Cliente(models.Model):
 	genero = models.CharField(max_length=1, choices=Genero.choices)	
 	telefono = models.CharField(max_length=20)
 	direccion = models.CharField(max_length=50)
+	pais = models.CharField(max_length=20)
 	direccion_facturacion = models.CharField(max_length=50)
 	activo = models.BooleanField(default=True)
 

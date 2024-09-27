@@ -32,7 +32,7 @@ class ClientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cliente
         fields = ['user_id', 'nombre', 'segundo_nombre','apellido', 'segundo_apellido', 
-                  'tipo_documento', 'fecha_nacimiento', 
+                  'tipo_documento', 'fecha_nacimiento', 'pais',
                   'genero', 'telefono', 'direccion', 'direccion_facturacion']
         
 class AdministradorSerializer(serializers.ModelSerializer):
