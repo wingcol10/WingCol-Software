@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import "../hojas-de-estilo/registro.css";
 import logocompleto from "../imagenes/WingcolName.png";
-import { Link } from "react-router-dom";
 import Select from "react-select";
 import { getNames, getCode } from "country-list";
+import { Link, useNavigate, Navigate } from "react-router-dom";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 
@@ -27,6 +27,7 @@ export function Registro() {
     profilePicture: null,
   });
 
+  const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState("");
 
   const countryOptions = getNames().map((country) => ({
@@ -51,7 +52,7 @@ export function Registro() {
     }));
 
     // Actualizar el patrón según el tipo de documento seleccionado
-    if (value === "cedula") {
+    if (value === "CC") {
       setDocumentPattern("^[0-9]+$"); // Solo números
     } else if (value === "pasaporte") {
       setDocumentPattern("^[A-Za-z]{3}[0-9]{6}$"); // 3 letras y 6 números
@@ -92,26 +93,25 @@ export function Registro() {
     setErrorMessage("");
 
     const dataToSend = {
-      firstName: formData.firstName,
-      secondName: formData.secondName,
-      lastName: formData.lastName,
-      secondLastName: formData.secondLastName,
-      phoneNumber: formData.phoneNumber,
-      gender: formData.gender,
+      nombre: formData.firstName,
+      segundo_nombre: formData.secondName,
+      apellido: formData.lastName,
+      segundo_apellido: formData.secondLastName,
+      telefono: formData.phoneNumber,
+      genero: formData.gender,
       email: formData.email,
-      documentType: formData.documentType,
-      documentNumber: formData.documentNumber,
-      address: formData.address,
-      billingAddress: formData.billingAddress,
-      birthDate: formData.birthDate,
+      tipo_documento: formData.documentType,
+      user_id: formData.documentNumber,
+      direccion: formData.address,
+      direccion_facturacion: formData.billingAddress,
+      fecha_nacimiento: formData.birthDate,
       password: formData.password,
       // Si quieres incluir la foto de perfil, necesitarías usar FormData
-      // profilePicture: formData.profilePicture,
-      // selectedCountry: formData.selectedCountry, // Si también lo necesitas
+      pais: formData.selectedCountry, // Si también lo necesitas
     };
 
     try {
-      const response = await fetch("http://tu-backend-url/api/register/", {
+      const response = await fetch("http://127.0.0.1:8000/users/client/create/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -121,8 +121,11 @@ export function Registro() {
 
       if (!response.ok) {
         const errorData = await response.json();
+        console.log(errorData);
         setErrorMessage(errorData.message || "Error al registrar el usuario.");
         return;
+      }else{
+        navigate("/");
       }
 
       // Si el registro es exitoso, puedes redirigir al usuario o mostrar un mensaje
@@ -205,9 +208,9 @@ export function Registro() {
         required
       >
         <option value="">Género</option>
-        <option value="hombre">Hombre</option>
-        <option value="mujer">Mujer</option>
-        <option value="otro">Otro</option>
+        <option value="M">Masculino</option>
+        <option value="F">Femenino</option>
+        <option value="O">Otro</option>
       </select>
 
       <div className="input-box">
@@ -228,8 +231,9 @@ export function Registro() {
         required
       >
         <option value="">Tipo de documento</option>
-        <option value="cedula">Cédula</option>
-        <option value="pasaporte">Pasaporte</option>
+        <option value="CC">Cédula</option>
+        <option value="CE">C. Extranjería</option>
+        <option value="PA">Pasaporte</option>
       </select>
 
       <div className="input-box">
@@ -242,7 +246,7 @@ export function Registro() {
           required
           onChange={handleChange}
           title={
-            formData.documentType === "cedula"
+            formData.documentType === "CC"
               ? "Solo números"
               : "3 letras y 6 números"
           }
