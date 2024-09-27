@@ -111,20 +111,23 @@ export function Registro() {
     };
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/users/client/create/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(dataToSend),
-      });
+      const response = await fetch(
+        "http://127.0.0.1:8000/users/client/create/",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(dataToSend),
+        }
+      );
 
       if (!response.ok) {
         const errorData = await response.json();
         console.log(errorData);
         setErrorMessage(errorData.message || "Error al registrar el usuario.");
         return;
-      }else{
+      } else {
         navigate("/");
       }
 
@@ -149,6 +152,7 @@ export function Registro() {
           placeholder="Primer nombre"
           pattern="[a-zA-Z]+"
           required
+          title="El nombre no puede tener espacios o números"
           maxLength={50}
           onChange={handleChange}
         />
@@ -160,6 +164,7 @@ export function Registro() {
           name="secondName"
           placeholder="Segundo nombre"
           pattern="[a-zA-Z]+"
+          title="El campo no puede tener espacios o números"
           maxLength={50}
           onChange={handleChange}
         />
@@ -173,6 +178,7 @@ export function Registro() {
           maxLength={50}
           pattern="[a-zA-Z]+"
           required
+          title="El campo no puede tener espacios o números"
           onChange={handleChange}
         />
       </div>
@@ -185,6 +191,7 @@ export function Registro() {
           maxLength={50}
           pattern="[a-zA-Z]+"
           required
+          title="El campo no puede tener espacios o números"
           onChange={handleChange}
         />
       </div>
@@ -196,6 +203,7 @@ export function Registro() {
           value={formData.phoneNumber}
           onChange={handlePhoneNumberChange}
           placeholder="Número de teléfono"
+          minLength={10}
           maxLength={18}
           required
         />
@@ -316,6 +324,7 @@ export function Registro() {
           isSearchable={true}
           className="react-select-container"
           classNamePrefix="react-select"
+          required
         />
       </div>
 
