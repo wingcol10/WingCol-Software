@@ -1,33 +1,60 @@
-import React from "react";
+import React, { useState } from "react";
 import "../hojas-de-estilo/inicio-de-sesion.css";
-import { useState } from "react";
 import { FaRegUserCircle } from "react-icons/fa";
 import { FaLock } from "react-icons/fa";
-import { Link } from "react-router-dom";
-import axios from "axios";
+import { Link, useNavigate, Navigate } from "react-router-dom";
 import logo from "../imagenes/logo.png";
 
 export function Formulario({ setUser }) {
-  // State para el usuario
+  // State para el usuario y la contraseña
   const [usuario, setUsuario] = useState("");
   const [contraseña, setContraseña] = useState("");
-  const [error, setError] = useState(false);
+  const [error, setError] = useState(""); // Cambiado a cadena para mostrar mensajes específicos
+
+  // useNavigate para redireccionar después del inicio de sesión exitoso
+  const navigate = useNavigate();
 
   // Función para manejar el submit
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (usuario === "" || contraseña === "") {
-      setError(true);
+      setError("Todos los campos son obligatorios");
       return;
     }
 
-    setError(false);
+    try {
+      // Realiza la petición al backend
+      const response = await fetch("127.0.0.1:8000/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: usuario,
+          password: contraseña,
+        }),
+      });
 
-    setUser([usuario]);
-  };
+      const data = await response.json();
 
-  const obtenerDatos = () => {
-    return axios.get("").then((response) => response.data);
+      if (response.ok) {
+        // Guarda el token en localStorage
+        localStorage.setItem("token", data.token);
+
+        // Guarda el usuario en el estado de la app
+        setUser({
+          name: data.name, // Por ejemplo, según lo que devuelva tu backend
+        });
+
+        // Redireccionar a la página principal
+        navigate("/home");
+      } else {
+        // Muestra el error devuelto por el backend
+        setError(data.message || "Error en el inicio de sesión");
+      }
+    } catch (error) {
+      setError("Error de conexión, por favor intenta de nuevo.");
+    }
   };
 
   // Retorno del componente
@@ -68,7 +95,8 @@ export function Formulario({ setUser }) {
             </Link>
           </p>
         </div>
-        {error && <p>Todos los campos son obligatorios</p>}
+        {error && <p className="error-message">{error}</p>}{" "}
+        {/* Mostrar mensajes de error */}
       </form>
     </section>
   );
