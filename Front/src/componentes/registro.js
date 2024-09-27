@@ -108,21 +108,24 @@ export function Registro() {
       fecha_nacimiento: formData.birthDate,
       password: formData.password,
       // Si quieres incluir la foto de perfil, necesitarías usar FormData
-      pais: formData.selectedCountry, // Si también lo necesitas
+      pais: formData.selectedCountry["label"], // Si también lo necesitas
     };
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/users/client/create/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(dataToSend),
-      });
+      const response = await fetch(
+        "http://127.0.0.1:8000/users/client/create/",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(dataToSend),
+        }
+      );
 
       if (!response.ok) {
         const errorData = await response.json();
-        console.log(errorData);
+        // console.log(errorData);
         setErrorMessage(errorData.message || "Error al registrar el usuario.");
         return;
 
@@ -150,8 +153,9 @@ export function Registro() {
           type="text"
           name="firstName"
           placeholder="Primer nombre"
-          pattern="[a-zA-Z]+"
+          pattern="^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]+$"
           required
+          title="El nombre no puede tener espacios o números"
           maxLength={50}
           onChange={handleChange}
         />
@@ -162,7 +166,8 @@ export function Registro() {
           type="text"
           name="secondName"
           placeholder="Segundo nombre"
-          pattern="[a-zA-Z]+"
+          pattern="^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]+$"
+          title="El campo no puede tener espacios o números"
           maxLength={50}
           onChange={handleChange}
         />
@@ -174,8 +179,9 @@ export function Registro() {
           name="lastName"
           placeholder="Primer apellido"
           maxLength={50}
-          pattern="[a-zA-Z]+"
+          pattern="^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]+$"
           required
+          title="El campo no puede tener espacios o números"
           onChange={handleChange}
         />
       </div>
@@ -186,8 +192,9 @@ export function Registro() {
           name="secondLastName"
           placeholder="Segundo apellido"
           maxLength={50}
-          pattern="[a-zA-Z]+"
+          pattern="^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]+$"
           required
+          title="El campo no puede tener espacios o números"
           onChange={handleChange}
         />
       </div>
@@ -199,6 +206,7 @@ export function Registro() {
           value={formData.phoneNumber}
           onChange={handlePhoneNumberChange}
           placeholder="Número de teléfono"
+          minLength={10}
           maxLength={18}
           required
         />
@@ -293,7 +301,10 @@ export function Registro() {
           type="password"
           name="password"
           placeholder="Contraseña"
-          maxLength={15}
+          maxLength={20}
+          minLength={8}
+          pattern="^[^\s]+$"
+          title="La contraseña no puede tener espacios en blanco"
           required
           onChange={handleChange}
         />
@@ -304,7 +315,10 @@ export function Registro() {
           type="password"
           name="confirmPassword"
           placeholder="Confirmar contraseña"
-          maxLength={15}
+          maxLength={20}
+          minLength={8}
+          pattern="^[^\s]+$"
+          title="La contraseña no puede tener espacios"
           required
           onChange={handleChange}
         />
@@ -319,6 +333,7 @@ export function Registro() {
           isSearchable={true}
           className="react-select-container"
           classNamePrefix="react-select"
+          required
         />
       </div>
 
