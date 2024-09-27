@@ -146,6 +146,7 @@ export function Registro() {
           placeholder="Primer nombre"
           pattern="[a-zA-Z]+"
           required
+          maxLength={50}
           onChange={handleChange}
         />
       </div>
@@ -156,6 +157,7 @@ export function Registro() {
           name="secondName"
           placeholder="Segundo nombre"
           pattern="[a-zA-Z]+"
+          maxLength={50}
           onChange={handleChange}
         />
       </div>
@@ -165,6 +167,7 @@ export function Registro() {
           type="text"
           name="lastName"
           placeholder="Primer apellido"
+          maxLength={50}
           pattern="[a-zA-Z]+"
           required
           onChange={handleChange}
@@ -176,6 +179,7 @@ export function Registro() {
           type="text"
           name="secondLastName"
           placeholder="Segundo apellido"
+          maxLength={50}
           pattern="[a-zA-Z]+"
           required
           onChange={handleChange}
@@ -212,6 +216,7 @@ export function Registro() {
           name="email"
           placeholder="Correo electrónico"
           required
+          maxLength={50}
           onChange={handleChange}
         />
       </div>
@@ -249,6 +254,7 @@ export function Registro() {
           type="text"
           name="address"
           placeholder="Dirección"
+          maxLength={50}
           onChange={handleChange}
         />
       </div>
@@ -258,6 +264,7 @@ export function Registro() {
           type="text"
           name="billingAddress"
           placeholder="Dirección de facturación"
+          maxLength={50}
           onChange={handleChange}
         />
       </div>
@@ -279,6 +286,7 @@ export function Registro() {
           type="password"
           name="password"
           placeholder="Contraseña"
+          maxLength={15}
           required
           onChange={handleChange}
         />
@@ -289,6 +297,7 @@ export function Registro() {
           type="password"
           name="confirmPassword"
           placeholder="Confirmar contraseña"
+          maxLength={15}
           required
           onChange={handleChange}
         />

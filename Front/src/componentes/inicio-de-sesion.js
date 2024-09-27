@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "../hojas-de-estilo/inicio-de-sesion.css";
 import { FaRegUserCircle } from "react-icons/fa";
 import { FaLock } from "react-icons/fa";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, Navigate } from "react-router-dom";
 import logo from "../imagenes/logo.png";
 
 export function Formulario({ setUser }) {
@@ -23,8 +23,8 @@ export function Formulario({ setUser }) {
     }
 
     try {
-      // Enviar la solicitud al backend utilizando fetch
-      const response = await fetch("http://tu-backend-url/api/login/", {
+      // Realiza la petición al backend
+      const response = await fetch("127.0.0.1:8000/api/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -35,29 +35,25 @@ export function Formulario({ setUser }) {
         }),
       });
 
+      const data = await response.json();
+
       if (response.ok) {
-        const data = await response.json();
-
-        // Asumiendo que el backend responde con un token JWT en data.token
-        const token = data.token;
-
-        // Guardar el token en localStorage
-        localStorage.setItem("token", token);
-
-        // Asumimos que el backend también responde con un objeto de usuario (opcional)
-        const user = data.user;
+        // Guarda el token en localStorage
+        localStorage.setItem("token", data.token);
 
         // Guarda el usuario en el estado de la app
-        setUser(user);
+        setUser({
+          name: data.name, // Por ejemplo, según lo que devuelva tu backend
+        });
 
-        // Redireccionar a la página principal (o la que elijas)
-        navigate("/home"); // Cambia "/home" por la ruta a la que quieras redirigir al usuario
+        // Redireccionar a la página principal
+        navigate("/home");
       } else {
-        setError("Credenciales incorrectas, por favor intenta de nuevo.");
+        // Muestra el error devuelto por el backend
+        setError(data.message || "Error en el inicio de sesión");
       }
     } catch (error) {
-      console.error(error);
-      setError("Hubo un problema con el inicio de sesión. Intenta más tarde.");
+      setError("Error de conexión, por favor intenta de nuevo.");
     }
   };
 
