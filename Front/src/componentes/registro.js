@@ -125,8 +125,8 @@ export function Registro() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        // console.log(errorData);
-        setErrorMessage(errorData.message || "Error al registrar el usuario.");
+        console.log(errorData.nombre);
+        setErrorMessage(errorData.nombre || errorData.user_id || errorData.email || "Error al registrar el usuario.");
         return;
 
       }else{
