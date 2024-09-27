@@ -150,7 +150,7 @@ export function Registro() {
           type="text"
           name="firstName"
           placeholder="Primer nombre"
-          pattern="[a-zA-Z]+"
+          pattern="^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]+$"
           required
           title="El nombre no puede tener espacios o números"
           maxLength={50}
@@ -163,7 +163,7 @@ export function Registro() {
           type="text"
           name="secondName"
           placeholder="Segundo nombre"
-          pattern="[a-zA-Z]+"
+          pattern="^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]+$"
           title="El campo no puede tener espacios o números"
           maxLength={50}
           onChange={handleChange}
@@ -176,7 +176,7 @@ export function Registro() {
           name="lastName"
           placeholder="Primer apellido"
           maxLength={50}
-          pattern="[a-zA-Z]+"
+          pattern="^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]+$"
           required
           title="El campo no puede tener espacios o números"
           onChange={handleChange}
@@ -189,7 +189,7 @@ export function Registro() {
           name="secondLastName"
           placeholder="Segundo apellido"
           maxLength={50}
-          pattern="[a-zA-Z]+"
+          pattern="^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]+$"
           required
           title="El campo no puede tener espacios o números"
           onChange={handleChange}
@@ -298,7 +298,10 @@ export function Registro() {
           type="password"
           name="password"
           placeholder="Contraseña"
-          maxLength={15}
+          maxLength={20}
+          minLength={8}
+          pattern="^[^\s]+$"
+          title="La contraseña no puede tener espacios en blanco"
           required
           onChange={handleChange}
         />
@@ -309,7 +312,10 @@ export function Registro() {
           type="password"
           name="confirmPassword"
           placeholder="Confirmar contraseña"
-          maxLength={15}
+          maxLength={20}
+          minLength={8}
+          pattern="^[^\s]+$"
+          title="La contraseña no puede tener espacios"
           required
           onChange={handleChange}
         />
