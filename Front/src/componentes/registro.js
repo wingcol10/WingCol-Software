@@ -107,7 +107,7 @@ export function Registro() {
       fecha_nacimiento: formData.birthDate,
       password: formData.password,
       // Si quieres incluir la foto de perfil, necesitarías usar FormData
-      pais: formData.selectedCountry, // Si también lo necesitas
+      pais: formData.selectedCountry["label"], // Si también lo necesitas
     };
 
     try {
@@ -124,7 +124,7 @@ export function Registro() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        console.log(errorData);
+        // console.log(errorData);
         setErrorMessage(errorData.message || "Error al registrar el usuario.");
         return;
       } else {
