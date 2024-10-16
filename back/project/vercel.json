@@ -1,13 +1,13 @@
 {
     "builds": [{
-        "src": "WingCol/wsgi.py",
+        "src": "WingCol/WingCol/wsgi.py",
         "use": "@vercel/python",
         "config": { "maxLambdaSize": "15mb", "runtime": "python3.9" }
     }],
     "routes": [
         {
             "src": "/(.*)",
-            "dest": "WingCol/wsgi.py"
+            "dest": "WingCol/WingCol/wsgi.py"
         }
     ]
 }
